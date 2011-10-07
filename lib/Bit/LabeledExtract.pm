@@ -6,27 +6,27 @@ use Carp qw/croak/;
 our $VERSION = '0.01';
 
 sub new {
-	my ( $class, $labels ) = @_;
-	croak "Argument must be ARRAY reference of label string." if !defined($labels) || ( ref($labels) || q{} ) ne 'ARRAY';
-	return bless {
-		labels     => [@$labels],
-		bit_length => scalar @$labels,
-	}, $class;
+    my ( $class, $labels ) = @_;
+    croak "Argument must be ARRAY reference of label string."
+        if !defined($labels) || ( ref($labels) || q{} ) ne 'ARRAY';
+    return bless {
+        labels     => [@$labels],
+        bit_length => scalar @$labels,
+    }, $class;
 }
 
 sub extract {
-	my ( $self, $bits ) = @_;
-	my $blen     = $self->{'bit_length'};
-	my @bits     = split //, sprintf("%0${blen}b", $bits);
-	croak "Bit length unmatched" if scalar(@bits) != $blen;
-	my $ea = each_array( @{ $self->{'labels'} }, @bits );
-	my @actives;
-	while ( my ( $label, $bit ) = $ea->() ) {
-		push @actives, $label if $bit;
-	}
-	return [@actives];
+    my ( $self, $bits ) = @_;
+    my $blen = $self->{'bit_length'};
+    my @bits = split //, sprintf( "%0${blen}b", $bits );
+    croak "Bit length unmatched" if scalar(@bits) != $blen;
+    my $ea = each_array( @{ $self->{'labels'} }, @bits );
+    my @actives;
+    while ( my ( $label, $bit ) = $ea->() ) {
+        push @actives, $label if $bit;
+    }
+    return [@actives];
 }
-
 1;
 __END__
 
